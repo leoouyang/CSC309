@@ -1,6 +1,6 @@
-var express = require('express');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 var app = express();
 
@@ -13,7 +13,10 @@ app.get('/', function(req, res){
       res.json({"times":req.session.page_views});
    } else {
       req.session.page_views = 1;
-      res.send({"times":req.session.page_views});
+      res.json({"times":req.session.page_views});
    }
 });
-app.listen(3000);
+
+app.listen(process.env.PORT || 3000, function(){
+  console.log('listening on', app.address().port);
+});
