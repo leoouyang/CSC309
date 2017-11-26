@@ -10,12 +10,12 @@ app.use(session({secret: "CSC309"}));
 
 var times = {}
 app.get('/', function(req, res){
-   if(times[req.session]){
-      times[req.session] += 1;
-      res.json({"times":times[req.session]});
+   if(times[req.session.id]){
+      times[req.session.id] += 1;
+      res.json({"times":times[req.session.id]});
    } else {
-     times[req.session] = 1;
-      res.json({"times":times[req.session]});
+     times[req.session.id] = 1;
+      res.json({"times":times[req.session.id]});
    }
 });
 
