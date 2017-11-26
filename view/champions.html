@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<div id="view">
+		<nav class="navbar navbar-default" style="font-size:24px; position:fixed;z-index:9999;width:100%">
+			<div class="container-fluid" style="padding-top:7px;">
+			<div class="navbar-header">
+			  <a class="navbar-brand">LOL Database</a>
+			</div>
+			<ul class="nav navbar-nav">
+			  <li><a id="champions">Champions</a></li>
+			  <li><a id="players">ProPlayers</a></li>
+			  <li><a id="compare_champ">Compare Champions</a></li>
+			</ul>
+			<div class="navbar-form navbar-right">
+			<div class="form-group">
+				<input type="text" class="form-control input-lg" id="search_champ_input"  placeholder="Search for Champions"/>
+			</div>
+			<button id="search_champ" class="btn btn-lg btn-info">Search</button>
+			</div>
+		  </div>
+		</nav>
+		<div class="container-fluid">
+			<div class='row'>
+			<div class='col-md-10 col-md-offset-1' style="background-color:rgba(255,255,255,0.7); text-align:center; position:absolute; top:100px;padding-bottom:100px;">
+			<ul id="champion_list" style="list-style-type: none;overflow:hidden; padding-top: 30px;"></ul>
+			<ul id="champ_pager" class="pagination-lg"></ul>
+			</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

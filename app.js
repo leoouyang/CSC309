@@ -19,8 +19,8 @@ app.get('/', function(req, res){
    }
 });
 
-app.get('/test', function(req, res) {
-    res.sendFile('test.html', {root: __dirname })
+app.get('/main', function(req, res) {
+    res.sendFile('view/index.html', {root: __dirname })
 });
 app.listen(PORT, function(){
   console.log('listening on', PORT);
