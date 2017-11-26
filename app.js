@@ -7,6 +7,7 @@ const app = express();
 
 app.use(cookieParser());
 app.use(session({secret: "CSC309"}));
+app.use('/static', express.static(__dirname + '/view'));
 
 var times = {}
 app.get('/', function(req, res){
