@@ -184,17 +184,15 @@ function validateUser(req, res, next) {
 		console.log(result.rows[0])
 		console.log(result.rows[0].id)
 		if(result.rows[0].password == req.query.password){
-			req.session.userID = result[0].id
+			req.session.userID = result.rows[0].id
 			res.status(200)
 			.json({
-				status: 'success',
-				message: 'Added one user'
+				status: 'success'
 			});
 		}else{
 			res.status(200)
 			.json({
-				status: 'false',
-				message: 'Added one user'
+				status: 'false'
 			});
 		}
     })
