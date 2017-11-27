@@ -18,6 +18,7 @@ app.get('/main', function(req, res) {
     res.sendFile('view/index.html', {root: __dirname})
 });
 
+app.get('/api/test', function(req, res){console.log(req.session.userID)});
 
 var champ_url = 'https://api.pandascore.co/lol/champions'
 function getChampsPage(page) {
