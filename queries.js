@@ -189,7 +189,11 @@ function validateUser(req, res, next) {
 				message: 'Added one user'
 			});
 		}else{
-			return false;
+			res.status(200)
+			.json({
+				status: 'false',
+				message: 'Added one user'
+			});
 		}
     })
     .catch(function(err) {
