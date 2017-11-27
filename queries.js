@@ -181,7 +181,7 @@ function validateUser(req, res, next) {
   db.result('select id, password from users where username = $1', req.query.username)
     .then(function (result) {
 		console.log("user result", result)
-		
+		console.log(result.rows[0])
 		console.log(result.rows[0].id)
 		if(result.rows[0].password == req.query.password){
 			req.session.userID = result[0].id
