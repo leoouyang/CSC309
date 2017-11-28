@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const bodyParser = require('body-parser');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -10,15 +11,29 @@ const db = require('./queries')
 app.use(cookieParser());
 app.use(session({secret: "CSC309"}));
 app.use('/static', express.static(__dirname + '/view'));
-
+app.use(bodyParser.urlencoded({extended: false}));
 //test the session
-app.get('/api/validation', db.validateUser);
+app.post('/api/validation', db.validateUser);
 
 app.get('/main', function(req, res) {
     res.sendFile('view/index.html', {root: __dirname})
 });
 
-app.get('/api/test', function(req, res){console.log(req.session.userID)});
+app.get('/api/champions', db.getAllChampions);
+//id in array
+app.get('/api/compare_champ', db.getIDChampions);
+
+app.get('/api/like', db.getLike);
+app.post('/api/like', db.addLike);
+app.put('/api/like/:id', db.updateLike);
+app.delete('/api/like/:id', db.deleteLike);
+
+app.get('/api/messages', db.getMessage);
+app.post('/api/messages', db.addMessage);
+app.delete('/api/messages/:id', db.deleteMessage);
+
+app.get('/api/players', db.searchPlayers);
+app.get('/api/player_page', db.pagePlayers);
 
 var champ_url = 'https://api.pandascore.co/lol/champions'
 function getChampsPage(page) {
@@ -52,7 +67,7 @@ function getchamps(){
 			}
 			console.log(result.length);
 			db.addChampions(result);
-		}).catch(reason => { 
+		}).catch(reason => {
 		  console.log(reason)
 		});
 	});
@@ -90,14 +105,14 @@ function getplayers(){
 			}
 			console.log(result.length);
 			db.addPlayers(result);
-		}).catch(reason => { 
+		}).catch(reason => {
 		  console.log(reason)
 		});
 	});
 }
 //43200000 12 hour
-//getchamps();
-//getplayers();
+getchamps();
+getplayers();
 var refresh = setInterval(function(){getchamps();getplayers();}, 86400000);
 
 

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+		<style type="text/css">
+			body {
+				background-image: url('background.jpg');
+				background-size: cover;
+				background-attachment: fixed;
+			}
+
+
+			ul#champion_list li, ul#player_list li{
+				float:left;
+				padding:10px;
+				margin:5px;
+				font-size: 20px;
+			}
+
+			ul#champion_list li:hover, ul#player_list li:hover{
+				background-color:rgba(0,0,0,0.2);
+			}
+
+			.champ_detail{
+				width:420px;
+			}
+
+			.popover{
+				max-width:500px;
+			}
+
+			#player_list .popover{
+				width:400px;
+				background:rgba(212,212,212,1);
+			}
+
+			.affix {
+			  top: 0;
+			  width: 100%;
+			  z-index: 9999 !important;
+			}
+			
+			.colorgraph {
+  			  height: 5px;
+  			  border-top: 0;
+  			  background: #c4e17f;
+  			  border-radius: 5px;
+  			  background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+  			  background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+  			  background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+  			  background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+			}
+		</style>
+
+</head>
+<body>
+	<div id="view">
+		<nav class="navbar navbar-default" style="font-size:24px; position:fixed;z-index:9999;width:100%">
+			<div class="container-fluid" style="padding-top:7px;">
+			<div class="navbar-header">
+			  					<!-- Trigger the modal with a button -->
+  					<button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal">Message</button>
+
+  					<!-- Modal -->
+  					<div class="modal fade" id="myModal" role="dialog">
+    					<div class="modal-dialog">
+      					<!-- Modal content-->
+      						<div class="modal-content">
+        						<div class="modal-header">
+          							<button type="button" class="close" data-dismiss="modal">&times;</button>
+          							<h4 class="modal-title">Your Messages</h4>
+        						</div>
+        						<div class="modal-body">
+          							<p>BLAH BLAH BLAHHHHHHHH</p>
+        						</div>
+        						<div class="modal-footer">
+          							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        						</div>
+      						</div>
+    					</div>
+  					</div>
+			</div>
+			<ul class="nav navbar-nav">
+			  <li><a id="champions">Champions</a></li>
+			  <li><a id="players">ProPlayers</a></li>
+			</ul>
+		  </div>
+		</nav>
+		<div class="container-fluid">
+  <h2>Striped Rows</h2>
+  <p>The .table-striped class adds zebra-stripes to a table:</p>            
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Champions</th>
+        <th>Name</th>
+        <th>Buttons</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><img src="https://pandacdn.blob.core.windows.net/cdn/images/lol/champion/image/556/Ornn.png"></td>
+        <td>Doe</td>
+        <td>john@example.com</td>
+      </tr>
+      <tr>
+        <td>Mary</td>
+        <td>Moe</td>
+        <td>mary@example.com</td>
+      </tr>
+      <tr>
+        <td>July</td>
+        <td>Dooley</td>
+        <td>july@example.com</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+	</div>
+</body>
+</html>

@@ -10,12 +10,29 @@
 	<body>
 		<div class="container-fluid" style=" text-align: center;">
 			<h1 style="color:white; height:100px; width:100%; position:relative; top:120px; font-size:50px;">Do you want to know more about League of Legends?</h1>
-			<button class="btn btn-circle btn-xl" data-target="#buttons" data-toggle="collapse" style="position:relative; top:160px; right:0;">YES!</button>
-			<div id="buttons" class="collapse" style="position:relative; top:230px;">
-				<ul>
-					<li class="start" style="left:-80px;"><a class="round white" id = "champions">Champions<span class="round">Info Of All Champions, Check them out!</span></a></li>
-					<li class="start" style="left:40px;"><a class="round white" id = "players">Players<span class="round">Check out the pro players. </span></a></li>
-				</ul>
+			<div class="row" style="margin-top:140px">
+			<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+				<form role="form">
+					<fieldset>
+						<hr class="colorgraph">
+						<div class="form-group">
+							<input id="username" class="form-control input-lg" placeholder="Username">
+						</div>
+						<div class="form-group">
+							<input type="password" id="password" class="form-control input-lg" placeholder="Password">
+						</div>
+						<hr class="colorgraph">
+						<div class="row">
+							<div class="col-xs-6 col-sm-6 col-md-6">
+								<a id="login" class="btn btn-lg btn-success btn-block">Log in</a>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6">
+								<a id="register" class="btn btn-lg btn-primary btn-block">Register</a>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+			</div>
 			</div>
 		</div>
 	</body>
@@ -26,7 +43,8 @@
 		var token='Y7yTYSaKsWrlpdhwY08gMqRiyV6798oTMzF5W0TDRsvcedNgLDI'
 		var per_page_champ = 48;
 		var per_page_player = 12;
-		var base_url ='https://api.pandascore.co/';
+		var old_url ='https://api.pandascore.co/';
+		var base_url = 'http://localhost:3000/';
 
 		function print_champ(data){
 			$('#champion_list').text("");
@@ -37,12 +55,15 @@
 									.attr('title',item.name)
 									.append($('<img>').attr('src', item.image_url))
 									.append($('<p>').text(item.name))
+									.append($('<button>').attr('class', 'btn btn-sm btn-danger glyphicon glyphicon-heart-empty')
+														.attr('champ_id', item.id))
 									.append($('<button>').attr('class', 'btn btn-default btn-sm compare_champ')
 														.attr('champ_id', item.id)
 														.text("+Compare"))
 									.append($('<button>').attr('class', 'btn btn-default btn-sm remove_compare_champ')
 														.attr('champ_id', item.id)
 														.text("Remove"))
+									
 				$('<li>').append(temp).appendTo('#champion_list')
 			});
 			$('[data-toggle="popover"]').popover({
@@ -55,7 +76,27 @@
 		function error_handler(xhr, error) {
 			alert("Oops!! Something went wrong: ", error)
 		}
-
+		
+		
+		$(document).on('click', '#login',function(){
+			var params = {};
+			params.username = $("#username").val();
+			params.password = $("#password").val();
+			$.ajax({
+				type:'POST',
+				url:base_url+'api/validation',
+				data: params,
+				success: function(data){
+					alert(JSON.stringify(data))	
+					if (data.status == "success"){
+						$('#champions').trigger('click');
+					}else{
+						alert("invalid username or password");
+					}
+				},
+				error: error_handler
+			});
+		});
 
 		$(document).on('click', '#champions',function(){
 			$('body').load('/static/champions.html #view',function(){
@@ -65,7 +106,7 @@
 					onPageClick: function (event, page) {
 						$.ajax({
 							type: 'GET',
-							url: base_url+'lol/champions?search[name]='+$('#search_champ_input').val()+'&per_page='+per_page_champ+'&page='+page+'&token='+token,
+							url: old_url+'lol/champions?search[name]='+$('#search_champ_input').val()+'&per_page='+per_page_champ+'&page='+page+'&token='+token,
 							success: print_champ,
 							error: error_handler
 						});
@@ -82,7 +123,7 @@
 				onPageClick: function (event, page) {
 					$.ajax({
 						type: 'GET',
-						url: base_url+'lol/champions?search[name]='+$('#search_champ_input').val()+'&per_page='+per_page_champ+'&page='+page+'&token='+token,
+						url: old_url+'lol/champions?search[name]='+$('#search_champ_input').val()+'&per_page='+per_page_champ+'&page='+page+'&token='+token,
 						success: print_champ,
 						error: error_handler
 					});
@@ -123,7 +164,7 @@
 					}
 					$.ajax({
 						type: 'GET',
-						url: base_url+'lol/champions?filter[id]='+IDs+'&token='+token,
+						url: old_url+'lol/champions?filter[id]='+IDs+'&token='+token,
 						success: function(data){
 							$.each(data,function(i,item){
 								$('#champ_'+i+'_image').attr('src', item.big_image_url);
@@ -171,7 +212,7 @@
 					team_img_url = item.current_team.image_url;
 					team_name = item.current_team.name;
 				}else{
-					team_img_url = "null_team.png";
+					team_img_url = "/static/null_team.png";
 					team_name = "No team";
 				}
 				var player_detail = "<img src='"+team_img_url+"' style='width:120px;height:120px;float:left;'/>"+"Team Name: "+team_name+"<br>First Name: "+item.first_name+"<br>Last Name: "+item.last_name+"<br>Hometown: "+item.hometown+"<br>Role: "+item.role;
@@ -202,7 +243,7 @@
 					onPageClick: function (event, page) {
 						$.ajax({
 							type: 'GET',
-							url: base_url+'lol/players?search[name]='+$('#search_player_input').val()+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
+							url: old_url+'lol/players?search[name]='+$('#search_player_input').val()+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
 							success: print_players,
 							error: error_handler
 						});
@@ -219,7 +260,7 @@
 				onPageClick: function (event, page) {
 					$.ajax({
 						type: 'GET',
-						url: base_url+'lol/players?search[name]='+$('#search_player_input').val()+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
+						url: old_url+'lol/players?search[name]='+$('#search_player_input').val()+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
 						success: print_players,
 						error: error_handler
 					});
@@ -235,7 +276,7 @@
 				onPageClick: function (event, page) {
 					$.ajax({
 						type: 'GET',
-						url: base_url+'lol/players?search[name]='+$('#search_player_input').val()+'&filter[role]=top'+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
+						url: old_url+'lol/players?search[name]='+$('#search_player_input').val()+'&filter[role]=top'+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
 						success: print_players,
 						error: error_handler
 					});
@@ -251,7 +292,7 @@
 				onPageClick: function (event, page) {
 					$.ajax({
 						type: 'GET',
-						url: base_url+'lol/players?search[name]='+$('#search_player_input').val()+'&filter[role]=jun'+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
+						url: old_url+'lol/players?search[name]='+$('#search_player_input').val()+'&filter[role]=jun'+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
 						success: print_players,
 						error: error_handler
 					});
@@ -267,7 +308,7 @@
 				onPageClick: function (event, page) {
 					$.ajax({
 						type: 'GET',
-						url: base_url+'lol/players?search[name]='+$('#search_player_input').val()+'&filter[role]=mid'+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
+						url: old_url+'lol/players?search[name]='+$('#search_player_input').val()+'&filter[role]=mid'+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
 						success: print_players,
 						error: error_handler
 					});
@@ -283,7 +324,7 @@
 				onPageClick: function (event, page) {
 					$.ajax({
 						type: 'GET',
-						url: base_url+'lol/players?search[name]='+$('#search_player_input').val()+'&filter[role]=adc'+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
+						url: old_url+'lol/players?search[name]='+$('#search_player_input').val()+'&filter[role]=adc'+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
 						success: print_players,
 						error: error_handler
 					});
@@ -299,13 +340,29 @@
 				onPageClick: function (event, page) {
 					$.ajax({
 						type: 'GET',
-						url: base_url+'lol/players?search[name]='+$('#search_player_input').val()+'&filter[role]=sup'+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
+						url: old_url+'lol/players?search[name]='+$('#search_player_input').val()+'&filter[role]=sup'+'&per_page='+per_page_player+'&page='+ page + '&token=' + token,
 						success: print_players,
 						error: error_handler
 					});
 				}
 			});
 		});
-
+		
+		$(document).on('click', '#favourites',function(){
+			$('body').load('/static/favourites.html #view',function(){
+				$('#champ_pager').twbsPagination({
+					totalPages: 3,
+					visiblePages: 3,
+					onPageClick: function (event, page) {
+						$.ajax({
+							type: 'GET',
+							url: old_url+'lol/champions?search[name]='+$('#search_champ_input').val()+'&per_page='+per_page_champ+'&page='+page+'&token='+token,
+							success: print_champ,
+							error: error_handler
+						});
+					}
+				});
+			});
+		});
 	</script>
 </html>

@@ -1,6 +1,13 @@
 
-
-var pgp = require('pg-promise')();
+var options = {
+    query: function (e) {
+        console.log('QUERY:', e.query);
+        if (e.params) {
+            console.log('PARAMS:', e.params);
+        }
+    }
+};
+var pgp = require('pg-promise')(options);
 pgp.pg.defaults.ssl = true;
 var db = pgp('postgres://ktwmjdndbbwody:0c1501bca6d9812c2ea6f9e15c7ff51d257fc54d7ca07af1554bb4c63c13fa5f@ec2-107-22-160-199.compute-1.amazonaws.com:5432/d2619khl4dkvco');
 
@@ -32,16 +39,19 @@ function addPlayers(player) {
   const values = [];
   for (i in player){
 	  var team_name, team_image;
+    if (player[i].role == null){
+      player[i].role = '';
+    }
 	  if (player[i].current_team == null){
-		team_name = null;
-		team_image = null;
+		  team_name = null;
+		  team_image = null;
 	  }else{
 		  team_name = player[i].current_team.name;
 		  team_image = player[i].current_team.image_url;
 	  }
 	  values.push({'id':player[i].id, 'name':player[i].name, 'first_name':player[i].first_name, 'last_name':player[i].last_name,
 'role':player[i].role, 'hometown':player[i].hometown, 'image_url':player[i].image_url, 'current_team_name':team_name, 'current_team_url':team_image})
-	
+
   }
   const query = pgp.helpers.insert(values, cs);
 
@@ -70,7 +80,7 @@ function getAllChampions(req, res, next) {
 }
 
 function getNameChampions(req, res, next) {
-  db.any('select * from champion where name like \'%$1%\'', req.query.name)
+  db.any('select * from champion where name like $1', '%'+req.query.name+'%')
     .then(function (data) {
       res.status(200)
         .json({
@@ -100,15 +110,12 @@ function getAllPlayers(req, res, next) {
 }
 
 function searchPlayers(req, res, next) {
-  db.any('select * from player where role = $1 and name like \'%$2%\' limit 12 offset $3',
-  req.query.role, req.query.name, req.query.page)
+
+  db.any('select * from player where role like $1 and lower(name) like lower($2) order by id limit 12 offset $3',
+  ['%'+req.query.role+'%', '%'+req.query.name+'%', (req.query.page - 1) * 12])
     .then(function (data) {
       res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved players with role and name'
-        });
+        .json(data);
     })
     .catch(function (err) {
       return next(err);
@@ -117,7 +124,7 @@ function searchPlayers(req, res, next) {
 
 function addLike(req, res, next, userID) {
   db.none('insert into liked(userID, champName, preferrenceLvl)' +
-      'values($1, $2, 5)', userID, req.body.champName)
+      'values($1, $2, 5)', [userID, req.body.champName])
     .then(function () {
       res.status(200)
         .json({
@@ -131,7 +138,7 @@ function addLike(req, res, next, userID) {
 }
 
 function updateLike(req, res, next) {
-  req.body.id = parseInt(req.body.id);
+  req.params.id = parseInt(req.params.id);
   req.body.preferrenceLvl = parseInt(req.body.preferrenceLvl);
   db.none('update liked set preferrenceLvl=$1 where id=$2',
     [req.body.preferrenceLvl, req.body.id])
@@ -161,7 +168,7 @@ function deleteLike(req, res, next) {
       return next(err);
     });
 }
-
+//req.session.userID
 function getLike(req, res, next, userID) {
   db.any('select like.id, url, name, preferrenceLvl from liked left join champion on liked.champName=champion.name where userID = $1', userID)
     .then(function (data) {
@@ -178,22 +185,28 @@ function getLike(req, res, next, userID) {
 }
 
 function validateUser(req, res, next) {
-  db.result('select id, password from users where username = $1', req.query.username)
+  db.result('select id, password from users where username = $1', req.body.username)
     .then(function (result) {
-		console.log("user result", result)
-		console.log(result.rows[0])
-		console.log(result.rows[0].id)
-		if(result.rows[0].password == req.query.password){
-			req.session.userID = result.rows[0].id
+		
+	console.log(result);
+		if (result.rowCount == 0){
 			res.status(200)
 			.json({
-				status: 'success'
+				status: 'fail'
 			});
 		}else{
-			res.status(200)
-			.json({
-				status: 'false'
-			});
+			if(result.rows[0].password == req.body.password){
+				req.session.userID = result.rows[0].id
+				res.status(200)
+				.json({
+					status: 'success'
+				});
+			}else{
+				res.status(200)
+				.json({
+					status: 'fail'
+				});
+			}
 		}
     })
     .catch(function(err) {
@@ -219,7 +232,8 @@ function addUser(req, res, next) {
 }
 
 function addMessage(req, res, next) {
-  db.none('insert into message(text)' + 'values(${text})', req.body)
+  console.log("text:",req.body);
+  db.none('insert into message(text) values ($1)', [req.body.text])
     .then(function () {
       res.status(200)
         .json({
@@ -234,12 +248,11 @@ function addMessage(req, res, next) {
 
 function deleteMessage(req, res, next) {
   var messageID = parseInt(req.params.id);
-  db.result('delete from message where id = $1', messageID)
-    .then(function (result) {
+  db.none('delete from message where id = $1', messageID)
+    .then(function () {
       res.status(200)
         .json({
-          status: 'success',
-          message: 'Deleted message'
+          status:'success'
         });
     })
     .catch(function (err) {
@@ -247,9 +260,46 @@ function deleteMessage(req, res, next) {
     });
 }
 
+function getIDChampions(req, res, next){
+  var array = req.query.IDs.split(",");
+  db.any('select * from champion where id in ($1:csv)', array)
+  .then(function (data) {
+    res.status(200)
+      .json(data);
+  })
+  .catch(function (err) {
+    return next(err);
+  });
+}
+
+function pagePlayers(req, res, next) {
+  db.any('select ceil(count(*) / cast(12 as float)) from player where role like $1 and name like $2',
+  ['%'+req.query.role+'%', '%'+req.query.name+'%'])
+    .then(function (data) {
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
+
+function getMessage(req, res, next) {
+  db.any('select * from message')
+    .then(function (data) {
+      res.status(200)
+        .json(data);
+    })
+    .catch(function (err) {
+      return next(err);
+    });
+}
 
 
 module.exports = {
+  getMessage: getMessage,
+  pagePlayers: pagePlayers,
+  getIDChampions: getIDChampions,
   addChampions: addChampions,
   addPlayers: addPlayers,
   getAllChampions: getAllChampions,
