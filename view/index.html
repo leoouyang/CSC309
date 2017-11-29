@@ -9,6 +9,7 @@
 	</head>
 	<body>
 		<div class="container-fluid" style=" text-align: center;">
+			<button style="display: none;" id="champions"></button>
 			<h1 style="color:white; height:100px; width:100%; position:relative; top:120px; font-size:50px;">Do you want to know more about League of Legends?</h1>
 			<div class="row" style="margin-top:140px">
 			<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
@@ -87,7 +88,6 @@
 				url:base_url+'api/validation',
 				data: params,
 				success: function(data){
-					alert(JSON.stringify(data))	
 					if (data.status == "success"){
 						$('#champions').trigger('click');
 					}else{
@@ -97,6 +97,7 @@
 				error: error_handler
 			});
 		});
+	
 
 		$(document).on('click', '#champions',function(){
 			$('body').load('/static/champions.html #view',function(){

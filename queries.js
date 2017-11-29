@@ -122,9 +122,9 @@ function searchPlayers(req, res, next) {
     });
 }
 
-function addLike(req, res, next, userID) {
+function addLike(req, res, next) {
   db.none('insert into liked(userID, champName, preferrenceLvl)' +
-      'values($1, $2, 5)', [userID, req.body.champName])
+      'values($1, $2, 5)', [req.session.userID, req.body.champName])
     .then(function () {
       res.status(200)
         .json({
@@ -169,8 +169,8 @@ function deleteLike(req, res, next) {
     });
 }
 //req.session.userID
-function getLike(req, res, next, userID) {
-  db.any('select like.id, url, name, preferrenceLvl from liked left join champion on liked.champName=champion.name where userID = $1', userID)
+function getLike(req, res, next) {
+  db.any('select like.id, url, name, preferrenceLvl from liked left join champion on liked.champName=champion.name where userID = $1', req.session.userID)
     .then(function (data) {
       res.status(200)
         .json({
@@ -187,8 +187,6 @@ function getLike(req, res, next, userID) {
 function validateUser(req, res, next) {
   db.result('select id, password from users where username = $1', req.body.username)
     .then(function (result) {
-		
-	console.log(result);
 		if (result.rowCount == 0){
 			res.status(200)
 			.json({
@@ -213,7 +211,6 @@ function validateUser(req, res, next) {
       return next(err);
     });
 }
-
 
 function addUser(req, res, next) {
   req.body.id = parseInt(req.body.id);
@@ -261,8 +258,9 @@ function deleteMessage(req, res, next) {
 }
 
 function getIDChampions(req, res, next){
-  var array = req.query.IDs.split(",");
-  db.any('select * from champion where id in ($1:csv)', array)
+  var str = req.query.IDs;
+  var array = str.split(",");
+  db.any('select * from champion where id in ($1:csv)', [array])
   .then(function (data) {
     res.status(200)
       .json(data);
@@ -273,7 +271,7 @@ function getIDChampions(req, res, next){
 }
 
 function pagePlayers(req, res, next) {
-  db.any('select ceil(count(*) / cast(12 as float)) from player where role like $1 and name like $2',
+  db.any('select ceil(count(*) / cast(12 as float)) from player where role like $1 and lower(name) like lower($2)',
   ['%'+req.query.role+'%', '%'+req.query.name+'%'])
     .then(function (data) {
       res.status(200)

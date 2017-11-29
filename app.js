@@ -12,16 +12,18 @@ app.use(cookieParser());
 app.use(session({secret: "CSC309"}));
 app.use('/static', express.static(__dirname + '/view'));
 app.use(bodyParser.urlencoded({extended: false}));
-//test the session
-app.post('/api/validation', db.validateUser);
+
 
 app.get('/main', function(req, res) {
     res.sendFile('view/index.html', {root: __dirname})
 });
 
+app.post('/api/validation', db.validateUser);
+
 app.get('/api/champions', db.getAllChampions);
-//id in array
 app.get('/api/compare_champ', db.getIDChampions);
+app.get('/api/players', db.searchPlayers);
+app.get('/api/player_page', db.pagePlayers);
 
 app.get('/api/like', db.getLike);
 app.post('/api/like', db.addLike);
@@ -31,9 +33,6 @@ app.delete('/api/like/:id', db.deleteLike);
 app.get('/api/messages', db.getMessage);
 app.post('/api/messages', db.addMessage);
 app.delete('/api/messages/:id', db.deleteMessage);
-
-app.get('/api/players', db.searchPlayers);
-app.get('/api/player_page', db.pagePlayers);
 
 var champ_url = 'https://api.pandascore.co/lol/champions'
 function getChampsPage(page) {
@@ -111,8 +110,8 @@ function getplayers(){
 	});
 }
 //43200000 12 hour
-getchamps();
-getplayers();
+// getchamps();
+// getplayers();
 var refresh = setInterval(function(){getchamps();getplayers();}, 86400000);
 
 
