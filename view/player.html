@@ -5,34 +5,19 @@
 <body>
 	<div id="view">
 		<nav class="navbar navbar-default" style="font-size:24px; position:fixed;z-index:9999;width:100%">
-			<div class="container-fluid" style="padding-top:7px;">
-			<div class="navbar-header">
-			  					<!-- Trigger the modal with a button -->
-  					<button type="button" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal">Message</button>
-
-  					<!-- Modal -->
-  					<div class="modal fade" id="myModal" role="dialog">
-    					<div class="modal-dialog">
-      					<!-- Modal content-->
-      						<div class="modal-content">
-        						<div class="modal-header">
-          							<button type="button" class="close" data-dismiss="modal">&times;</button>
-          							<h4 class="modal-title">Your Messages</h4>
-        						</div>
-        						<div class="modal-body">
-          							<p>BLAH BLAH BLAHHHHHHHH</p>
-        						</div>
-        						<div class="modal-footer">
-          							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        						</div>
-      						</div>
-    					</div>
-  					</div>
-			</div>
-			<ul class="nav navbar-nav">
-			  <li><a id="champions">Champions</a></li>
-			  <li><a id="players">ProPlayers</a></li>
-			</ul>
+  			<div class="container-fluid" style="padding-top:7px;">
+    			<div class="navbar-header">
+      				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        				<span class="icon-bar"></span>
+        				<span class="icon-bar"></span>
+        				<span class="icon-bar"></span> 
+      				</button>
+    			</div>
+    			<div class="collapse navbar-collapse" id="myNavbar">
+      				<ul class="nav navbar-nav">
+        				<li><a id="champions">Champions</a></li>
+			 			<li><a id="players">ProPlayers</a></li>
+      				</ul>
 			<div class="navbar-form navbar-right">
 			<div class="form-group">
 				<input type="text" class="form-control input-lg" id="search_player_input"  placeholder="Search for Players"/>
@@ -42,7 +27,7 @@
 		  </div>
 		</nav>
 		<div class="container">
-			<div class="btn-group-vertical" style="position:fixed; top:120px;left:30px">
+			<div class="btn-group-vertical" style="position:fixed; top:120px;left:30px;z-index:9999;">
 				<button id="top" type="button" class="btn btn-info">TOP</button>
 				<button id="jun" type="button" class="btn btn-info">JUN</button>
 				<button id="mid" type="button" class="btn btn-info">MID</button>
@@ -52,7 +37,13 @@
 		</div>
 		<div class="container-fluid">
 			<div class='row'>
-			<div class='col-md-10 col-md-offset-1' style="background-color:rgba(255,255,255,0.7); text-align:center; position:absolute; top:100px; padding-bottom:100px;">
+			<div class='col-md-10 col-md-offset-1' style= "text-align:center; position: absolute; top:80px">
+			<div class="panel panel-info">
+  					<div class="panel-heading">Messages</div>
+  					<div class="panel-body scrollable-panel" style="height:70px; overflow-y: scroll;">fdoinf dsddasd asdja slkdnassdasdasldjlas;dklsanfskjfjdkbfjkdbfgjkdbjk fbdsjkfbjkdsbfjkdsabfjkdabgjkbdsajkbgdjksbgjkdsbgjkdbsagjkbdsajkbgjaksd gjkdsbgjkdbsagklbadsgkbjkasdbgkjsadbgkjdsbgjkldsbgkjsadbgkjdbgkjsdbgkjsbgkldjgklasjbdgkjlabsdgkjlagklnfkldfnknefklsnfldsknflkadsngklasndgklfadsnglkandfglkafdngklfadsngkldngkladsngklfadngklafdngklfansdglknaklfgnadfklgnkldafnglkadsfngsdofjohisdfj</div>
+			</div>
+			</div>
+			<div class='col-md-10 col-md-offset-1' style="background-color:rgba(255,255,255,0.7); text-align:center; position:absolute; top:200px; padding-bottom:100px;">
 			<ul id="player_list" style="list-style-type: none;overflow:hidden; padding-top:30px;"></ul>
 			<ul id="player_pager" class="pagination-lg"></ul>
 			</div>

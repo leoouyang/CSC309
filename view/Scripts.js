@@ -1,51 +1,8 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta charset="utf-8"/>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<link rel="stylesheet" href="/static/styles.css">
-
-	</head>
-	<body>
-		<div class="container-fluid" style=" text-align: center;">
-			<button style="display: none;" id="champions"></button>
-			<h1 style="color:white; height:100px; width:100%; position:relative; top:120px; font-size:50px;">Do you want to know more about League of Legends?</h1>
-			<div class="row" style="margin-top:140px">
-			<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-				<form role="form">
-					<fieldset>
-						<hr class="colorgraph">
-						<div class="form-group">
-							<input id="username" class="form-control input-lg" placeholder="Username">
-						</div>
-						<div class="form-group">
-							<input type="password" id="password" class="form-control input-lg" placeholder="Password">
-						</div>
-						<hr class="colorgraph">
-						<div class="row">
-							<div class="col-xs-6 col-sm-6 col-md-6">
-								<a id="login" class="btn btn-lg btn-success btn-block">Log in</a>
-							</div>
-							<div class="col-xs-6 col-sm-6 col-md-6">
-								<a id="register" class="btn btn-lg btn-primary btn-block">Register</a>
-							</div>
-						</div>
-					</fieldset>
-				</form>
-			</div>
-			</div>
-		</div>
-	</body>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="/static/jquery.twbsPagination.min.js"></script>
-	<script>
 		var token='Y7yTYSaKsWrlpdhwY08gMqRiyV6798oTMzF5W0TDRsvcedNgLDI'
 		var per_page_champ = 48;
 		var per_page_player = 12;
 		var old_url ='https://api.pandascore.co/';
-		var base_url = 'https://csc309-cookingmama.herokuapp.com/';
+		var base_url = 'http://localhost:3000/';
 
 		function print_champ(data){
 			$('#champion_list').text("");
@@ -128,11 +85,17 @@
 
 		$(document).on('click', '#champions',function(){
 			$('body').load('/static/champions.html #view',function(){
-				$.ajax({
-					type: 'GET',
-					url: base_url+'api/champions',
-					success: print_champ,
-					error: error_handler
+				$('#champ_pager').twbsPagination({
+					totalPages: 3,
+					visiblePages: 3,
+					onPageClick: function (event, page) {
+						$.ajax({
+							type: 'GET',
+							url: old_url+'lol/champions?search[name]='+$('#search_champ_input').val()+'&per_page='+per_page_champ+'&page='+page+'&token='+token,
+							success: print_champ,
+							error: error_handler
+						});
+					}
 				});
 			});
 		});
@@ -174,45 +137,44 @@
 				alert("Champion is not in the compare list");
 			}
 		});
-
+		
 		$(document).on('click', '#compare_champ',function(){
 			if (compare_champ.length == 0){
 				alert("You haven't add any champion to compare yet!")
 			}else{
 				$('body').load('/static/compare_champ.html #view',function(){
 					var IDs = "";
-					for (var i=0; i < compare_champ.length - 1; i++){
+					for (var i=0; i < compare_champ.length; i++){
 						IDs += compare_champ[i] + ',';
 					}
-					IDs += compare_champ[compare_champ.length-1];
 					$.ajax({
 						type: 'GET',
-						url: base_url+'api/compare_champ?IDs='+IDs,
+						url: old_url+'lol/champions?filter[id]='+IDs+'&token='+token,
 						success: function(data){
 							$.each(data,function(i,item){
 								$('#champ_'+i+'_image').attr('src', item.big_image_url);
 								$('#compare_name').append($('<td>').text(item.name))
 												.append($('<td>'));
-								$('#compare_hp').append($('<td>').text(parseFloat(item.hp).toFixed(2)))
-												.append($('<td>').text((parseFloat(item.hp) + parseFloat(item.hpperlevel)*17).toFixed(2)));
-								$('#compare_hpregen').append($('<td>').text(parseFloat(item.hpregen).toFixed(2)))
-												.append($('<td>').text((parseFloat(item.hpregen) + parseFloat(item.hpregenperlevel)*17).toFixed(2)));
-								$('#compare_mp').append($('<td>').text(parseFloat(item.mp).toFixed(2)))
-												.append($('<td>').text((parseFloat(item.mp) + parseFloat(item.mpperlevel)*17).toFixed(2)));
-								$('#compare_mpregen').append($('<td>').text(parseFloat(item.mpregen).toFixed(2)))
-												.append($('<td>').text((parseFloat(item.mpregen) + parseFloat(item.mpregenperlevel)*17).toFixed(2)));
-								$('#compare_ad').append($('<td>').text(parseFloat(item.attackdamage).toFixed(2)))
-												.append($('<td>').text((parseFloat(item.attackdamage) + parseFloat(item.attackdamageperlevel)*17).toFixed(2)));
-								$('#compare_arange').append($('<td>').text(parseFloat(item.attackrange).toFixed(2)))
+								$('#compare_hp').append($('<td>').text(item.hp.toFixed(2)))
+												.append($('<td>').text((item.hp + item.hpperlevel*17).toFixed(2)));
+								$('#compare_hpregen').append($('<td>').text(item.hpregen.toFixed(2)))
+												.append($('<td>').text((item.hpregen + item.hpregenperlevel*17).toFixed(2)));
+								$('#compare_mp').append($('<td>').text(item.mp.toFixed(2)))
+												.append($('<td>').text((item.mp + item.mpperlevel*17).toFixed(2)));
+								$('#compare_mpregen').append($('<td>').text(item.mpregen.toFixed(2)))
+												.append($('<td>').text((item.mpregen + item.mpregenperlevel*17).toFixed(2)));
+								$('#compare_ad').append($('<td>').text(item.attackdamage.toFixed(2)))
+												.append($('<td>').text((item.attackdamage + item.attackdamageperlevel*17).toFixed(2)));
+								$('#compare_arange').append($('<td>').text(item.attackrange.toFixed(2)))
 												.append($('<td>'));
-								var attackspeed = (0.625/(1+parseFloat(item.attackspeedoffset))).toFixed(2);
+								var attackspeed = (0.625/(1+item.attackspeedoffset)).toFixed(2);
 								$('#compare_aspeed').append($('<td>').text(attackspeed))
-												.append($('<td>').text((attackspeed * (1 + parseFloat(item.attackspeedperlevel)*0.17)).toFixed(2)));
-								$('#compare_armor').append($('<td>').text(parseFloat(item.armor).toFixed(2)))
-												.append($('<td>').text((parseFloat(item.armor) + parseFloat(item.armorperlevel)*17).toFixed(2)));
-								$('#compare_mr').append($('<td>').text(parseFloat(item.spellblock).toFixed(2)))
-												.append($('<td>').text((parseFloat(item.spellblock) + parseFloat(item.spellblockperlevel)*17).toFixed(2)));
-								$('#compare_movespeed').append($('<td>').text(parseFloat(item.movespeed).toFixed(2)))
+												.append($('<td>').text((attackspeed * (1 + item.attackspeedperlevel*0.17)).toFixed(2)));
+								$('#compare_armor').append($('<td>').text(item.armor.toFixed(2)))
+												.append($('<td>').text((item.armor + item.armorperlevel*17).toFixed(2)));
+								$('#compare_mr').append($('<td>').text(item.spellblock.toFixed(2)))
+												.append($('<td>').text((item.spellblock + item.spellblockperlevel*17).toFixed(2)));
+								$('#compare_movespeed').append($('<td>').text(item.movespeed.toFixed(2)))
 												.append($('<td>'));
 							});
 						},
@@ -387,5 +349,3 @@
 				});
 			});
 		});
-	</script>
-</html>

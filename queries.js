@@ -68,11 +68,7 @@ function getAllChampions(req, res, next) {
   db.any('select * from champion')
     .then(function (data) {
       res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ALL champions'
-        });
+        .json(data);
     })
     .catch(function (err) {
       return next(err);
@@ -83,11 +79,7 @@ function getNameChampions(req, res, next) {
   db.any('select * from champion where name like $1', '%'+req.query.name+'%')
     .then(function (data) {
       res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved champions with name'
-        });
+        .json(data);
     })
     .catch(function (err) {
       return next(err);
@@ -98,11 +90,7 @@ function getAllPlayers(req, res, next) {
   db.any('select * from player limit 12 offset %1', (req.query.page - 1) * 12)
     .then(function (data) {
       res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ALL players with page'
-        });
+        .json(data);
     })
     .catch(function (err) {
       return next(err);
@@ -173,11 +161,7 @@ function getLike(req, res, next) {
   db.any('select like.id, url, name, preferrenceLvl from liked left join champion on liked.champName=champion.name where userID = $1', req.session.userID)
     .then(function (data) {
       res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved players with role'
-        });
+        .json(data);
     })
     .catch(function (err) {
       return next(err);
@@ -213,14 +197,13 @@ function validateUser(req, res, next) {
 }
 
 function addUser(req, res, next) {
-  req.body.id = parseInt(req.body.id);
-  db.none('insert into users(id, username, password, isadmin)' +
-      'values(${id}, ${username}, ${password}, false)', req.body)
+	console.log(req.body);
+  db.none('insert into users(username, password, isadmin)' +
+      'values(${username}, ${password}, false)', req.body)
     .then(function () {
       res.status(200)
         .json({
-          status: 'success',
-          message: 'Added one user'
+          status: 'success'
         });
     })
     .catch(function (err) {
@@ -283,7 +266,7 @@ function pagePlayers(req, res, next) {
 }
 
 function getMessage(req, res, next) {
-  db.any('select * from message')
+  db.any('select * from message order by ts DESC')
     .then(function (data) {
       res.status(200)
         .json(data);

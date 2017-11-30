@@ -19,6 +19,7 @@ app.get('/main', function(req, res) {
 });
 
 app.post('/api/validation', db.validateUser);
+app.post('/api/register', db.addUser);
 
 app.get('/api/champions', db.getAllChampions);
 app.get('/api/compare_champ', db.getIDChampions);
