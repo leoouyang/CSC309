@@ -278,7 +278,7 @@
 			var cur_role = $(this).attr('id');
 			$.ajax({
 				type: 'GET',
-				url: base_url+'api/player_page?role'+cur_role+'=&name='+$('#search_player_input').val(),
+				url: base_url+'api/player_page?role='+cur_role+'&name='+$('#search_player_input').val(),
 				success: function(data){
 					$('#player_pager').twbsPagination('destroy');
 					$('#player_pager').twbsPagination({
