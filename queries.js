@@ -266,7 +266,7 @@ function pagePlayers(req, res, next) {
 }
 
 function getMessage(req, res, next) {
-  db.any('select * from message order by ts DESC')
+  db.any('select * from message order by ts ASC')
     .then(function (data) {
       res.status(200)
         .json(data);

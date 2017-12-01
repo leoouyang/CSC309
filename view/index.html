@@ -42,10 +42,26 @@
 	<script src="/static/jquery.twbsPagination.min.js"></script>
 	<script>
 		var token='Y7yTYSaKsWrlpdhwY08gMqRiyV6798oTMzF5W0TDRsvcedNgLDI'
-		var per_page_champ = 48;
-		var per_page_player = 12;
-		var old_url ='https://api.pandascore.co/';
 		var base_url = 'https://csc309-cookingmama.herokuapp.com/';
+		
+		var messages=[]
+		function refresh_messages(){
+			if($("#messages").length){
+				$.ajax({
+					type: 'GET',
+					url: base_url+'api/messages',
+					success: function(data){
+						$.each(data,function(i,item){
+							if (messages.indexOf(item.id) < 0){
+								$("#messages").prepend($('<p style="background-color:rgba(255,255,0,0.3)">').text(item.text))
+								messages.push(item.id)
+							}
+						})
+					},
+					error: error_handler
+				});
+			}
+		}
 
 		function print_champ(data){
 			$('#champion_list').text("");
@@ -130,7 +146,7 @@
 				$.ajax({
 					type: 'GET',
 					url: base_url+'api/champions',
-					success: print_champ,
+					success: [print_champ, function(){messages = [];refresh_messages();}],
 					error: error_handler
 				});
 			});
@@ -258,7 +274,7 @@
 				$.ajax({
 					type: 'GET',
 					url: base_url+'api/player_page?role=&name=',
-					success: function(data){
+					success: [function(data){
 						$('#player_pager').twbsPagination({
 							totalPages: data[0].ceil,
 							visiblePages: 10,
@@ -271,7 +287,7 @@
 								});
 							}
 						});
-					},
+					}, function(){messages = [];refresh_messages();}],
 					error: error_handler
 				})
 			});
@@ -408,6 +424,6 @@
 			});
 		});
 		
-		var latest_message
+		var refresh = setInterval(refresh_messages, 10000);
 	</script>
 </html>
