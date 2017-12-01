@@ -129,7 +129,7 @@ function updateLike(req, res, next) {
   req.params.id = parseInt(req.params.id);
   req.body.preferrenceLvl = parseInt(req.body.preferrenceLvl);
   db.none('update liked set preferrenceLvl=$1 where id=$2',
-    [req.body.preferrenceLvl, req.body.id])
+    [req.body.preferrenceLvl, req.params.id])
     .then(function () {
       res.status(200)
         .json({
@@ -158,7 +158,7 @@ function deleteLike(req, res, next) {
 }
 //req.session.userID
 function getLike(req, res, next) {
-  db.any('select like.id, url, name, preferrenceLvl from liked left join champion on liked.champName=champion.name where userID = $1', req.session.userID)
+  db.any('select liked.id, image_url, name, preferrenceLvl from liked left join champion on liked.champName=champion.name where userID = $1 order by name', [req.session.userID])
     .then(function (data) {
       res.status(200)
         .json(data);
