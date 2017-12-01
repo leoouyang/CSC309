@@ -265,15 +265,23 @@ function pagePlayers(req, res, next) {
     });
 }
 
-function getMessage(req, res, next) {
+var message_cache;
+
+function cacheMessage() {
   db.any('select * from message order by ts ASC')
     .then(function (data) {
-      res.status(200)
-        .json(data);
+		message_cache = data
     })
     .catch(function (err) {
-      return next(err);
+      console.log("message cache failed")
     });
+}
+cacheMessage();
+var refresh = setInterval(cacheMessage, 2000);
+
+function getMessage(req, res, next) {
+    res.status(200)
+        .json(message_cache);
 }
 
 
