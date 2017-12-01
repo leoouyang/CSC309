@@ -2,14 +2,12 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 const token = 'token=AZo91-wrT9J6f-O2eSfj6uxv1eTpvgsKl5ohVObmTeKY388sZ_U'
 const db = require('./queries');
 
-app.use(cors());
 app.use(cookieParser());
 app.use(session({secret: "CSC309",resave: true,saveUninitialized:true}));
 app.use('/static', express.static(__dirname + '/view'));
