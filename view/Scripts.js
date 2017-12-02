@@ -13,6 +13,7 @@
 							if (messages.indexOf(item.id) < 0){
 								$("#messages").prepend($('<p style="background-color:rgba(255,255,0,0.3)">').text(item.text))
 								messages.push(item.id)
+								$('html, body').animate({ scrollTop: 0 }, 'fast');
 							}
 						})
 					},

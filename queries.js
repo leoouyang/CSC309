@@ -1,13 +1,13 @@
 
-var options = {
+/*var options = {
     query: function (e) {
         console.log('QUERY:', e.query);
         if (e.params) {
             console.log('PARAMS:', e.params);
         }
     }
-};
-var pgp = require('pg-promise')(options);
+};*/
+var pgp = require('pg-promise')();
 pgp.pg.defaults.ssl = true;
 var db = pgp('postgres://ktwmjdndbbwody:0c1501bca6d9812c2ea6f9e15c7ff51d257fc54d7ca07af1554bb4c63c13fa5f@ec2-107-22-160-199.compute-1.amazonaws.com:5432/d2619khl4dkvco');
 
