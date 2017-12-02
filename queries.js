@@ -76,7 +76,7 @@ function getAllChampions(req, res, next) {
 }
 
 function getNameChampions(req, res, next) {
-  db.any('select * from champion where name like $1', '%'+req.query.name+'%')
+  db.any('select * from champion where lower(name) like lower($1)', '%'+req.query.name+'%')
     .then(function (data) {
       res.status(200)
         .json(data);
