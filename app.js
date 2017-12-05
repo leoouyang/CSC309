@@ -14,7 +14,7 @@ app.use('/static', express.static(__dirname + '/view'));
 app.use(bodyParser.urlencoded({extended: false}));
 
 
-app.get('/main', function(req, res) {
+app.get('/', function(req, res) {
     res.sendFile('view/index.html', {root: __dirname})
 });
 
