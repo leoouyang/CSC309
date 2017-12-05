@@ -1,5 +1,5 @@
 		var token='Y7yTYSaKsWrlpdhwY08gMqRiyV6798oTMzF5W0TDRsvcedNgLDI'
-		var base_url = 'http://localhost:3000/';
+		var base_url = 'https://csc309-cookingmama.herokuapp.com/';
 		//http://localhost:3000/
 		//https://csc309-cookingmama.herokuapp.com/
 		var messages=[]
