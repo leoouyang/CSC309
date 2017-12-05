@@ -211,12 +211,13 @@ function addUser(req, res, next) {
 }
 
 function addMessage(req, res, next) {
-  db.none('insert into message(text) values ($1)', [req.body.text])
+	var message = req.body.text
+  db.none('insert into message(text) values ($1)', [message])
     .then(function () {
       res.status(200)
         .json({
           status: 'success',
-          AddedMessage: req.body.text
+          AddedMessage: message
         });
     })
     .catch(function (err) {
