@@ -197,7 +197,6 @@ function validateUser(req, res, next) {
 }
 
 function addUser(req, res, next) {
-	console.log(req.body);
   db.none('insert into users(username, password, isadmin)' +
       'values(${username}, ${password}, false)', req.body)
     .then(function () {
@@ -212,13 +211,12 @@ function addUser(req, res, next) {
 }
 
 function addMessage(req, res, next) {
-  console.log("text:",req.body);
   db.none('insert into message(text) values ($1)', [req.body.text])
     .then(function () {
       res.status(200)
         .json({
           status: 'success',
-          message: 'Added one message'
+          AddedMessage: req.body.text
         });
     })
     .catch(function (err) {
