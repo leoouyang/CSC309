@@ -211,7 +211,7 @@ function addUser(req, res, next) {
 }
 
 function addMessage(req, res, next) {
-	var message = req.body.text
+	var message = req.body.data;
   db.none('insert into message(text) values ($1)', [message])
     .then(function () {
       res.status(200)
