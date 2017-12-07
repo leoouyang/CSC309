@@ -260,7 +260,7 @@
 					$('#player_pager').twbsPagination('destroy');
 					if(data[0].ceil == 0){
 						alert("No player satisfies the searching criteria!!")
-					else{
+					}else{
 						$('#player_pager').twbsPagination({
 							totalPages: data[0].ceil,
 							visiblePages: 10,
