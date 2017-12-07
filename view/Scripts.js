@@ -258,18 +258,22 @@
 				url: base_url+'api/player_page?role=&name='+$('#search_player_input').val(),
 				success: function(data){
 					$('#player_pager').twbsPagination('destroy');
-					$('#player_pager').twbsPagination({
-						totalPages: data[0].ceil,
-						visiblePages: 10,
-						onPageClick: function (event, page) {
-							$.ajax({
-								type: 'GET',
-								url: base_url+'api/players?role=&name='+$('#search_player_input').val()+'&page='+page,
-								success: print_players,
-								error: error_handler
-							});
-						}
-					});
+					if(data[0].ceil == 0){
+						alert("No player satisfies the searching criteria!!")
+					else{
+						$('#player_pager').twbsPagination({
+							totalPages: data[0].ceil,
+							visiblePages: 10,
+							onPageClick: function (event, page) {
+								$.ajax({
+									type: 'GET',
+									url: base_url+'api/players?role=&name='+$('#search_player_input').val()+'&page='+page,
+									success: print_players,
+									error: error_handler
+								});
+							}
+						});
+					}
 				},
 				error: error_handler
 			})
@@ -282,18 +286,22 @@
 				url: base_url+'api/player_page?role='+cur_role+'&name='+$('#search_player_input').val(),
 				success: function(data){
 					$('#player_pager').twbsPagination('destroy');
-					$('#player_pager').twbsPagination({
-						totalPages: data[0].ceil,
-						visiblePages: 10,
-						onPageClick: function (event, page) {
-							$.ajax({
-								type: 'GET',
-								url: base_url+'api/players?role='+cur_role+'&name='+$('#search_player_input').val()+'&page='+page,
-								success: print_players,
-								error: error_handler
-							});
-						}
-					});
+					if(data[0].ceil == 0){
+						alert("No player satisfies the searching criteria!!")
+					}else{
+						$('#player_pager').twbsPagination({
+							totalPages: data[0].ceil,
+							visiblePages: 10,
+							onPageClick: function (event, page) {
+								$.ajax({
+									type: 'GET',
+									url: base_url+'api/players?role='+cur_role+'&name='+$('#search_player_input').val()+'&page='+page,
+									success: print_players,
+									error: error_handler
+								});
+							}
+						});
+					}
 				},
 				error: error_handler
 			});
