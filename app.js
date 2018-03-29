@@ -113,9 +113,9 @@ function getplayers(){
 	});
 }
 //43200000 12 hour
-//getchamps();
-//getplayers();
-//var refresh = setInterval(function(){getchamps();getplayers();}, 86400000);
+getchamps();
+getplayers();
+var refresh = setInterval(function(){getchamps();getplayers();}, 86400000);
 
 
 
